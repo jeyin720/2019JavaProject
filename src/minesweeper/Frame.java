@@ -5,7 +5,10 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -22,8 +25,12 @@ public class Frame extends JFrame {
 	final int landmine=10;
 	int Mine_count=landmine;
 	int board[][]=new int[size][size];
+	int clickCount[][]=new int[size][size];
 	JButton [][]btn=new JButton[size][size];
 	int showboard[][]=new int[size][size];
+	ImageIcon flagImage=new ImageIcon("../flag.png");
+	ImageIcon questionMark=new ImageIcon("../question.png");
+	
 	JLabel top_hidden_landmine=new JLabel("숨겨진 지뢰: "+landmine);
 	JLabel top_remain_landmine=new JLabel("남은 지뢰: "+Mine_count);
 	JButton restart=new JButton("다시 시작하기");
@@ -46,6 +53,7 @@ public class Frame extends JFrame {
      				btn[i][j]=new JButton();
      				panel1.add(btn[i][j]);
      				btn[i][j].addActionListener(new myActionListener());
+     				btn[i][j].addMouseListener(new RightMouse());
      			}
      		}
      		
@@ -88,6 +96,7 @@ public class Frame extends JFrame {
 		for(int i=0;i<size;i++) {
 			for(int j=0;j<size;j++) {
 				showboard[i][j]=0;
+				clickCount[i][j]=0;
 			}
 		}
 		//지뢰 배정
@@ -126,7 +135,18 @@ public class Frame extends JFrame {
 			}
 		}
 	}//setboard
-	
+	public void flag(int i,int j) {
+		if(showboard[i][j]!=1)
+		btn[i][j].setIcon(flagImage);
+		Mine_count--;
+		top_remain_landmine.setText("남은 지뢰: "+Mine_count);
+	}
+	public void questionMark(int i,int j) {
+		if(showboard[i][j]!=1)
+		Mine_count++;
+		top_remain_landmine.setText("남은 지뢰: "+Mine_count);
+		btn[i][j].setIcon(questionMark);
+	}
 	public void gameover() {//게임오버
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
@@ -142,18 +162,68 @@ public class Frame extends JFrame {
 		if(board[x][y]!=0&&board[x][y]!=8)
 			btn[x][y].setText(Integer.toString(board[x][y]));
 		if (board[x][y]==8) {
+			btn[x][y].setIcon(null);
 			btn[x][y].setText("지뢰");
 		}
 		btn[x][y].setEnabled(false);
 	}
 	
+	public class RightMouse implements MouseListener{
+		@Override
+		public void mouseClicked(MouseEvent e) {//마우스 우클릭 되었을때
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+			if(e.getButton()==MouseEvent.BUTTON3){
+				
+				for(int i=0;i<size;i++) {
+					for(int j=0;j<size;j++) {
+						if(btn[i][j]==e.getSource()) {
+							clickCount[i][j]++;
+							if(clickCount[i][j]==1) flag(i,j);
+							else if(clickCount[i][j]==2) questionMark(i,j);
+							else {
+								btn[i][j].setIcon(null);
+								clickCount[i][j]=0;
+							}
+					}
+					}
+				}
+			}
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
 	public class myActionListener implements ActionListener{//버튼 클릭
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					// TODO Auto-generated method stub
+					
 					for(int i=0;i<size;i++) {
 						for(int j=0;j<size;j++) {
 							if(btn[i][j]==e.getSource()) {
+								btn[i][j].setIcon(null);
 								board_remove(i,j);
 							}
 						}
