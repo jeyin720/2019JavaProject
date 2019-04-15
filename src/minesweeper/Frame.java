@@ -1,6 +1,7 @@
 package minesweeper;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -28,11 +29,13 @@ public class Frame extends JFrame {
 	int clickCount[][] = new int[size][size];
 	JButton[][] btn = new JButton[size][size];
 	int showboard[][] = new int[size][size];
-	ImageIcon flagImage = new ImageIcon("../flag.png");
-	ImageIcon questionMark = new ImageIcon("../question.png");
+	ImageIcon flagImage = new ImageIcon("../images/key.png");
+	ImageIcon questionMark = new ImageIcon("../images/question.png");
+	ImageIcon clearImage = new ImageIcon("../images/gold.png");
+	ImageIcon treasureBox = new ImageIcon("../images/box.png");
 
-	JLabel top_hidden_landmine = new JLabel("숨겨진 지뢰: " + landmine);
-	JLabel top_remain_landmine = new JLabel("남은 지뢰: " + Mine_count);
+	JLabel top_hidden_landmine = new JLabel("숨겨진 상자: " + landmine);
+	JLabel top_remain_landmine = new JLabel("남은 열쇠: " + Mine_count);
 	JButton restart = new JButton("다시 시작하기");
 
 	public Frame() {
@@ -170,10 +173,10 @@ public class Frame extends JFrame {
 		if (showboard[i][j] != 1) {
 			btn[i][j].setIcon(flagImage);
 			Mine_count--;
-			if(board[i][j]==8) {
+			if (board[i][j] == 8) {
 				Mine_check--;
 			}
-			top_remain_landmine.setText("남은 깃발: " + Mine_count);
+			top_remain_landmine.setText("남은 열쇠: " + Mine_count);
 		}
 		if (Mine_check == 0) {
 			gameClear();
@@ -183,18 +186,27 @@ public class Frame extends JFrame {
 	public void questionMark(int i, int j) {
 		if (showboard[i][j] != 1) {
 			Mine_count++;
-			if(board[i][j]==8) {
+			if (board[i][j] == 8) {
 				Mine_check++;
 			}
 		}
-		top_remain_landmine.setText("남은 지뢰: " + Mine_count);
+		top_remain_landmine.setText("남은 열쇠: " + Mine_count);
 		btn[i][j].setIcon(questionMark);
 	}
 
 	public void gameClear() {
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
+				if (board[i][j] == 8) {
+					btn[i][j].setIcon(null);
+					btn[i][j].setBackground(new Color(255, 128, 0));
+					btn[i][j].setIcon(clearImage);
+				}
+			}
+		}
 		String gameclear_button[] = { "확인", "메인화면으로" };
-		JOptionPane.showOptionDialog(null, "축하합니다! 지뢰를 모두 찾았습니다. 다시 시작하시겠습니까?", "GAMECLEAR", JOptionPane.YES_NO_OPTION,
-				JOptionPane.QUESTION_MESSAGE, null, gameclear_button, "확인");
+		JOptionPane.showOptionDialog(null, "축하합니다! 모든 상자를 열어 보물을 얻었습니다. 다시 시작하시겠습니까?", "GAMECLEAR",
+				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, gameclear_button, "확인");
 	}
 
 	public void gameover() {// 게임오버
@@ -211,18 +223,22 @@ public class Frame extends JFrame {
 	}
 
 	public void shownum(int x, int y) {// 버튼 비활성화
+		btn[x][y].setEnabled(false);
 		if (board[x][y] != 0 && board[x][y] != 8)
 			btn[x][y].setText(Integer.toString(board[x][y]));
 		if (board[x][y] == 8) {
+			btn[x][y].setEnabled(true);
 			btn[x][y].setIcon(null);
-			btn[x][y].setText("지뢰");
+
+			btn[x][y].setBackground(new Color(255, 128, 0));
+			btn[x][y].setIcon(treasureBox);
 		}
-		btn[x][y].setEnabled(false);
+
 	}
 
-	public class RightMouse implements MouseListener {
+	public class RightMouse implements MouseListener {// 마우스 우클릭 되었을때
 		@Override
-		public void mouseClicked(MouseEvent e) {// 마우스 우클릭 되었을때
+		public void mouseClicked(MouseEvent e) {
 			// TODO Auto-generated method stub
 
 		}
