@@ -20,9 +20,10 @@ public class Frame extends JFrame {
 	JFrame frame = new JFrame();
 	JPanel panel1 = new JPanel();
 	JPanel panel2 = new JPanel();
+	JPanel panel3 = new JPanel();
 
-	final int size = 16;
-	final int landmine = 20;
+	final int size = 9;
+	final int landmine = 10;
 	int Mine_count = landmine;
 	int Mine_check = landmine;
 	int board[][] = new int[size][size];
@@ -33,16 +34,23 @@ public class Frame extends JFrame {
 	ImageIcon questionMark = new ImageIcon("../images/question.png");
 	ImageIcon clearImage = new ImageIcon("../images/gold.png");
 	ImageIcon treasureBox = new ImageIcon("../images/box.png");
+	ImageIcon gameStart = new ImageIcon("../images/12.png");
 
 	JLabel top_hidden_landmine = new JLabel("숨겨진 상자: " + landmine);
 	JLabel top_remain_landmine = new JLabel("남은 열쇠: " + Mine_count);
 	JButton restart = new JButton("다시 시작하기");
+	JButton startButton = new JButton();
 
 	public Frame() {
 		setTitle("지뢰찾기");
 		frame.setSize(800, 800);
 		frame.setResizable(false);
-		this.setboard();
+
+		startButton.setBorderPainted(false);
+		startButton.setContentAreaFilled(false);
+		startButton.setFocusPainted(false);
+		startButton.setIcon(gameStart);
+		panel3.add(startButton);
 
 		// toplabel.setHorizontalAlignment(SwingConstants.CENTER);
 		// toplabel.setFont(toplabel.getFont().deriveFont(15.0f));글자크기​
@@ -65,11 +73,26 @@ public class Frame extends JFrame {
 		panel2.add(top_remain_landmine);
 
 		frame.add(panel2, BorderLayout.NORTH);
-		frame.add(panel1, BorderLayout.CENTER);
+
+		frame.add(panel3, BorderLayout.CENTER);
+		panel1.setVisible(false);
+		panel2.setVisible(false);
 
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		startButton.addActionListener(new ActionListener() {
 
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				panel3.setVisible(false);
+				panel1.setVisible(true);
+				panel2.setVisible(true);
+				frame.add(panel1, BorderLayout.CENTER);
+				setboard();
+			}
+
+		});
 	}
 
 	public void board_remove(int x, int y) {// 겉 보드 지울 값 넣기
