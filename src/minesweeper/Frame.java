@@ -34,7 +34,9 @@ public class Frame extends JFrame {
 	ImageIcon questionMark = new ImageIcon("../images/question.png");
 	ImageIcon clearImage = new ImageIcon("../images/gold.png");
 	ImageIcon treasureBox = new ImageIcon("../images/box.png");
-	ImageIcon gameStart = new ImageIcon("../images/12.png");
+	ImageIcon gameStart = new ImageIcon("../images/gamestart_btn.png");
+	ImageIcon gameStart_press = new ImageIcon("../images/gamestart_btn_pressed.png");
+	
 
 	JLabel top_hidden_landmine = new JLabel("숨겨진 상자: " + landmine);
 	JLabel top_remain_landmine = new JLabel("남은 열쇠: " + Mine_count);
@@ -45,11 +47,12 @@ public class Frame extends JFrame {
 		setTitle("지뢰찾기");
 		frame.setSize(800, 800);
 		frame.setResizable(false);
-
+		
+		startButton.setIcon(gameStart);
 		startButton.setBorderPainted(false);
 		startButton.setContentAreaFilled(false);
 		startButton.setFocusPainted(false);
-		startButton.setIcon(gameStart);
+		
 		panel3.add(startButton);
 
 		// toplabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -80,10 +83,28 @@ public class Frame extends JFrame {
 
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		startButton.addActionListener(new ActionListener() {
+		startButton.addMouseListener(new MouseListener() {
 
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void mouseClicked(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				startButton.setIcon(gameStart_press);
+			}
+
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				startButton.setIcon(gameStart);
+			}
+
+			@Override
+			public void mousePressed(MouseEvent arg0) {
 				// TODO Auto-generated method stub
 				panel3.setVisible(false);
 				panel1.setVisible(true);
@@ -91,6 +112,14 @@ public class Frame extends JFrame {
 				frame.add(panel1, BorderLayout.CENTER);
 				setboard();
 			}
+
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			
 
 		});
 	}
