@@ -21,9 +21,10 @@ public class Frame extends JFrame {
 	JPanel panel1 = new JPanel();
 	JPanel panel2 = new JPanel();
 	JPanel panel3 = new JPanel();
-
-	final int size = 9;
-	final int landmine = 10;
+	JPanel panel3_sub=new JPanel();
+	
+	final int size = 12;
+	final int landmine = 15;
 	int Mine_count = landmine;
 	int Mine_check = landmine;
 	int board[][] = new int[size][size];
@@ -36,25 +37,35 @@ public class Frame extends JFrame {
 	ImageIcon treasureBox = new ImageIcon("../images/box.png");
 	ImageIcon gameStart = new ImageIcon("../images/gamestart_btn.png");
 	ImageIcon gameStart_press = new ImageIcon("../images/gamestart_btn_pressed.png");
+	ImageIcon howToPlay=new ImageIcon("../images/howtoplay.png");
+	ImageIcon howToPlay_press=new ImageIcon("../images/howtoplay_press.png");
 	
 
 	JLabel top_hidden_landmine = new JLabel("숨겨진 상자: " + landmine);
 	JLabel top_remain_landmine = new JLabel("남은 열쇠: " + Mine_count);
 	JButton restart = new JButton("다시 시작하기");
 	JButton startButton = new JButton();
-
+	JButton howToPlayButton=new JButton();
 	public Frame() {
 		setTitle("지뢰찾기");
 		frame.setSize(800, 800);
 		frame.setResizable(false);
 		
+		
+		panel3.add(startButton);
+		panel3.add(howToPlayButton);
 		startButton.setIcon(gameStart);
 		startButton.setBorderPainted(false);
 		startButton.setContentAreaFilled(false);
 		startButton.setFocusPainted(false);
+		//startButton.setLocation(400, 500);
+		howToPlayButton.setIcon(howToPlay);
+		howToPlayButton.setBorderPainted(false);
+		howToPlayButton.setContentAreaFilled(false);
+		howToPlayButton.setFocusPainted(false);
+		//howToPlayButton.setLocation(400, 700);
 		
-		panel3.add(startButton);
-
+		
 		// toplabel.setHorizontalAlignment(SwingConstants.CENTER);
 		// toplabel.setFont(toplabel.getFont().deriveFont(15.0f));글자크기​
 		// Panel에 Layout 적용
@@ -80,9 +91,10 @@ public class Frame extends JFrame {
 		frame.add(panel3, BorderLayout.CENTER);
 		panel1.setVisible(false);
 		panel2.setVisible(false);
-
+		
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
 		startButton.addMouseListener(new MouseListener() {
 
 			@Override
@@ -118,9 +130,39 @@ public class Frame extends JFrame {
 				// TODO Auto-generated method stub
 				
 			}
+		});
+		howToPlayButton.addMouseListener(new MouseListener() {
 
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				howToPlayButton.setIcon(howToPlay_press);
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				howToPlayButton.setIcon(howToPlay);
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				panel3.setVisible(false);
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
 			
-
 		});
 	}
 
