@@ -18,15 +18,16 @@ import javax.swing.JPanel;
 
 public class Frame extends JFrame {
 	JFrame frame = new JFrame();
-	JPanel panel1 = new JPanel();
-	JPanel panel2 = new JPanel();
-	JPanel panel3 = new JPanel();
-	JPanel panel3_sub=new JPanel();
+	JPanel MineBottom = new JPanel();
+	JPanel MineTop = new JPanel();
+	JPanel MainPanel = new JPanel();
+	JPanel MainPanel_sub=new JPanel();
 	
 	final int size = 12;
 	final int landmine = 15;
 	int Mine_count = landmine;
 	int Mine_check = landmine;
+	
 	int board[][] = new int[size][size];
 	int clickCount[][] = new int[size][size];
 	JButton[][] btn = new JButton[size][size];
@@ -46,56 +47,29 @@ public class Frame extends JFrame {
 	JButton restart = new JButton("다시 시작하기");
 	JButton startButton = new JButton();
 	JButton howToPlayButton=new JButton();
+	
 	public Frame() {
+		//프레임 설정
 		setTitle("지뢰찾기");
 		frame.setSize(800, 800);
 		frame.setResizable(false);
 		
-		
-		panel3.add(startButton);
-		panel3.add(howToPlayButton);
+		//메인화면
+		MainPanel.add(startButton);
+		MainPanel.add(howToPlayButton);
 		startButton.setIcon(gameStart);
 		startButton.setBorderPainted(false);
 		startButton.setContentAreaFilled(false);
 		startButton.setFocusPainted(false);
-		//startButton.setLocation(400, 500);
+		startButton.setBounds(250, 400,270,81);
+		
 		howToPlayButton.setIcon(howToPlay);
 		howToPlayButton.setBorderPainted(false);
 		howToPlayButton.setContentAreaFilled(false);
 		howToPlayButton.setFocusPainted(false);
-		//howToPlayButton.setLocation(400, 700);
+		howToPlayButton.setBounds(250, 500, 271, 82);
 		
-		
-		// toplabel.setHorizontalAlignment(SwingConstants.CENTER);
-		// toplabel.setFont(toplabel.getFont().deriveFont(15.0f));글자크기​
-		// Panel에 Layout 적용
-		panel1.setLayout(new GridLayout(size, size));
-		panel2.setLayout(new FlowLayout());
-
-		// Panel에 그것들을 추가..
-		for (int i = 0; i < size; i++) {
-			for (int j = 0; j < size; j++) {
-				btn[i][j] = new JButton();
-				panel1.add(btn[i][j]);
-				btn[i][j].addActionListener(new myActionListener());
-				btn[i][j].addMouseListener(new RightMouse());
-			}
-		}
-
-		panel2.add(top_hidden_landmine);
-		panel2.add(restart);
-		panel2.add(top_remain_landmine);
-
-		frame.add(panel2, BorderLayout.NORTH);
-
-		frame.add(panel3, BorderLayout.CENTER);
-		panel1.setVisible(false);
-		panel2.setVisible(false);
-		
-		frame.setVisible(true);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		startButton.addMouseListener(new MouseListener() {
+		startButton.addMouseListener(new MouseListener() {//시작버튼 마누스 이벤트
 
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -118,10 +92,11 @@ public class Frame extends JFrame {
 			@Override
 			public void mousePressed(MouseEvent arg0) {
 				// TODO Auto-generated method stub
-				panel3.setVisible(false);
-				panel1.setVisible(true);
-				panel2.setVisible(true);
-				frame.add(panel1, BorderLayout.CENTER);
+				MainPanel.setVisible(false);
+				MineBottom.setVisible(true);
+				MineTop.setVisible(true);
+				frame.add(MineBottom, BorderLayout.CENTER);
+				frame.add(MineTop, BorderLayout.NORTH);
 				setboard();
 			}
 
@@ -154,7 +129,7 @@ public class Frame extends JFrame {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				// TODO Auto-generated method stub
-				panel3.setVisible(false);
+				MainPanel.setVisible(false);
 			}
 
 			@Override
@@ -164,6 +139,40 @@ public class Frame extends JFrame {
 			}
 			
 		});
+		
+		restart.addActionListener(new ActionListener() {//다시시작
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				
+				MineBottom.removeAll();
+				setboard();
+				Mine_count=landmine;
+				top_remain_landmine.setText("남은 열쇠: " + Mine_count);
+				MineBottom.revalidate();
+				MineBottom.repaint();
+				
+			}
+			
+		});
+		//MineTop에 버튼,라벨 추가
+		MineTop.setLayout(new FlowLayout());
+		MineTop.add(top_hidden_landmine);
+		MineTop.add(restart);
+		MineTop.add(top_remain_landmine);
+
+		
+		MainPanel.setLayout(null);
+		frame.add(MainPanel);
+		
+		MineBottom.setVisible(false);
+		MineTop.setVisible(false);
+		
+		frame.setVisible(true);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		
 	}
 
 	public void board_remove(int x, int y) {// 겉 보드 지울 값 넣기
@@ -197,6 +206,17 @@ public class Frame extends JFrame {
 	}
 
 	public void setboard() {
+		MineBottom.setLayout(new GridLayout(size, size));
+		//MineBottom 패널에 버튼 추가
+			for (int i = 0; i < size; i++) {
+				for (int j = 0; j < size; j++) {
+					btn[i][j] = new JButton();
+					MineBottom.add(btn[i][j]);
+					btn[i][j].addActionListener(new myActionListener());
+					btn[i][j].addMouseListener(new RightMouse());
+				}
+			}
+				
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
 				showboard[i][j] = 0;
@@ -330,7 +350,7 @@ public class Frame extends JFrame {
 
 	}
 
-	public class RightMouse implements MouseListener {// 마우스 우클릭 되었을때
+	public class RightMouse implements MouseListener {// 버튼 마우스 우클릭 되었을때
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			// TODO Auto-generated method stub
