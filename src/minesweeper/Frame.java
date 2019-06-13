@@ -15,7 +15,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-
+//  button.setDisabledIcon(new ImageIcon("icon.gif")); 비활성화일때 버튼 이미지
 public class Frame extends JFrame {
 	JFrame frame = new JFrame();
 	JPanel MineBottom = new JPanel();
@@ -40,7 +40,7 @@ public class Frame extends JFrame {
 	ImageIcon gameStart_press = new ImageIcon("../images/gamestart_btn_pressed.png");
 	ImageIcon howToPlay=new ImageIcon("../images/howtoplay.png");
 	ImageIcon howToPlay_press=new ImageIcon("../images/howtoplay_press.png");
-	
+	ImageIcon grass=new ImageIcon("../images/풀.png");
 
 	JLabel top_hidden_landmine = new JLabel("숨겨진 상자: " + landmine);
 	JLabel top_remain_landmine = new JLabel("남은 열쇠: " + Mine_count);
@@ -171,8 +171,6 @@ public class Frame extends JFrame {
 		
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		
 	}
 
 	public void board_remove(int x, int y) {// 겉 보드 지울 값 넣기
@@ -206,12 +204,13 @@ public class Frame extends JFrame {
 	}
 
 	public void setboard() {
-		MineBottom.setLayout(new GridLayout(size, size));
+		MineBottom.setLayout(new GridLayout(size, size,2,2));
 		//MineBottom 패널에 버튼 추가
 			for (int i = 0; i < size; i++) {
 				for (int j = 0; j < size; j++) {
 					btn[i][j] = new JButton();
 					MineBottom.add(btn[i][j]);
+					btn[i][j].setIcon(grass);
 					btn[i][j].addActionListener(new myActionListener());
 					btn[i][j].addMouseListener(new RightMouse());
 				}
@@ -338,14 +337,20 @@ public class Frame extends JFrame {
 
 	public void shownum(int x, int y) {// 버튼 비활성화
 		btn[x][y].setEnabled(false);
-		if (board[x][y] != 0 && board[x][y] != 8)
+		if (board[x][y] != 0 && board[x][y] != 8) {
+			btn[x][y].setIcon(null);
 			btn[x][y].setText(Integer.toString(board[x][y]));
+		}
+			
 		if (board[x][y] == 8) {
 			btn[x][y].setEnabled(true);
 			btn[x][y].setIcon(null);
 
 			btn[x][y].setBackground(new Color(255, 128, 0));
 			btn[x][y].setIcon(treasureBox);
+		}
+		if(board[x][y]==0) {
+			btn[x][y].setIcon(null);
 		}
 
 	}
