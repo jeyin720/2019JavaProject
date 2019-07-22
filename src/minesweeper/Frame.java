@@ -8,14 +8,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-
+import java.awt.*;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-//  button.setDisabledIcon(new ImageIcon("icon.gif")); 비활성화일때 버튼 이미지
+//button.setDisabledIcon(new ImageIcon("icon.gif")); 비활성화일때 버튼 이미지
 public class Frame extends JFrame {
 	JFrame frame = new JFrame();
 	JPanel MineBottom = new JPanel();
@@ -48,11 +48,14 @@ public class Frame extends JFrame {
 	JButton startButton = new JButton();
 	JButton howToPlayButton=new JButton();
 	
+	Container c;
+	
 	public Frame() {
 		//프레임 설정
 		setTitle("지뢰찾기");
 		frame.setSize(800, 800);
 		frame.setResizable(false);
+		c=frame.getContentPane();
 		
 		//메인화면
 		MainPanel.add(startButton);
@@ -95,8 +98,8 @@ public class Frame extends JFrame {
 				MainPanel.setVisible(false);
 				MineBottom.setVisible(true);
 				MineTop.setVisible(true);
-				frame.add(MineBottom, BorderLayout.CENTER);
-				frame.add(MineTop, BorderLayout.NORTH);
+				c.add(MineBottom, BorderLayout.CENTER);
+				c.add(MineTop, BorderLayout.NORTH);
 				setboard();
 			}
 
@@ -164,7 +167,7 @@ public class Frame extends JFrame {
 
 		
 		MainPanel.setLayout(null);
-		frame.add(MainPanel);
+		c.add(MainPanel);
 		
 		MineBottom.setVisible(false);
 		MineTop.setVisible(false);
@@ -173,7 +176,7 @@ public class Frame extends JFrame {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
-	public void board_remove(int x, int y) {// 겉 보드 지울 값 넣기
+	public void board_remove(int x, int y) {// 어느 범위까지 shownum 될지 정해줌
 		if (showboard[x][y] == 0) {
 			if (board[x][y] == 0) {
 				shownum(x, y);
@@ -331,7 +334,7 @@ public class Frame extends JFrame {
 			}
 		}
 		String gameover_button[] = { "확인", "메인화면으로" };
-		JOptionPane.showOptionDialog(null, "지뢰를 밟았습니다.. 다시 시작하시겠습니까?", "GAMEOVER", JOptionPane.YES_NO_OPTION,
+		JOptionPane.showOptionDialog(null, "보물상자를 열쇠없이 건드려 모두 사라졌습니다.. 다시 시작하시겠습니까?", "GAMEOVER", JOptionPane.YES_NO_OPTION,
 				JOptionPane.QUESTION_MESSAGE, null, gameover_button, "확인");
 	}
 
@@ -378,7 +381,6 @@ public class Frame extends JFrame {
 		public void mousePressed(MouseEvent e) {
 			// TODO Auto-generated method stub
 			if (e.getButton() == MouseEvent.BUTTON3) {
-
 				for (int i = 0; i < size; i++) {
 					for (int j = 0; j < size; j++) {
 						if (btn[i][j] == e.getSource()) {
@@ -388,7 +390,7 @@ public class Frame extends JFrame {
 							else if (clickCount[i][j] == 2)
 								questionMark(i, j);
 							else {
-								btn[i][j].setIcon(null);
+								btn[i][j].setIcon(grass);
 								clickCount[i][j] = 0;
 							}
 						}
@@ -413,7 +415,7 @@ public class Frame extends JFrame {
 			for (int i = 0; i < size; i++) {
 				for (int j = 0; j < size; j++) {
 					if (btn[i][j] == e.getSource()) {
-						btn[i][j].setIcon(null);
+						//btn[i][j].setIcon(null);
 						board_remove(i, j);
 					}
 				}
