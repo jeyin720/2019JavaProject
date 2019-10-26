@@ -1,26 +1,18 @@
 package minesweeper;
+import javax.swing.*;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
+import minesweeper.Frame.RightMouse;
+import minesweeper.Frame.myActionListener;
+
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.*;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-//button.setDisabledIcon(new ImageIcon("icon.gif")); ë¹„í™œì„±í™”ì¼ë•Œ ë²„íŠ¼ ì´ë¯¸ì§€
-public class Frame extends JFrame {
-	JFrame frame = new JFrame();
+public class Mine_game extends JPanel{
+	
 	JPanel MineBottom = new JPanel();
 	JPanel MineTop = new JPanel();
-	JPanel MainPanel = new JPanel();
 	
 	final int size = 12;
 	final int landmine = 15;
@@ -36,27 +28,27 @@ public class Frame extends JFrame {
 	ImageIcon clearImage = new ImageIcon("../images/gold.png");
 	ImageIcon treasureBox = new ImageIcon("../images/box.png");
 	
-	ImageIcon grass=new ImageIcon("../images/í’€.png");
-
-	JLabel top_hidden_landmine = new JLabel("ìˆ¨ê²¨ì§„ ìƒì: " + landmine);
-	JLabel top_remain_landmine = new JLabel("ë‚¨ì€ ì—´ì‡ : " + Mine_count);
-	JButton restart = new JButton("ë‹¤ì‹œ ì‹œì‘í•˜ê¸°");
+	ImageIcon grass=new ImageIcon("../images/Ç®.png");
 	
+	JLabel top_hidden_landmine = new JLabel("¼û°ÜÁø »óÀÚ: " + landmine);
+	JLabel top_remain_landmine = new JLabel("³²Àº ¿­¼è: " + Mine_count);
+	JButton restart = new JButton("´Ù½Ã ½ÃÀÛÇÏ±â");
 	
-	Container c;
-	
-	public Frame() {
-		//í”„ë ˆì„ ì„¤ì •
-		setTitle("ì§€ë¢°ì°¾ê¸°");
-		frame.setSize(800, 800);
-		frame.setResizable(false);
-		c=frame.getContentPane();
+	Main mainFrame=null;
+	Mine_game(Main mainFrame){// »ı¼ºÀÚ
+		this.mainFrame=mainFrame;
 		
-		//ë©”ì¸í™”ë©´
+		MineTop.setLayout(new FlowLayout());
+		MineTop.add(top_hidden_landmine);
+		MineTop.add(restart);
+		MineTop.add(top_remain_landmine);
+		
+		setLayout(new BorderLayout());
+		setboard();
 		
 		
-		restart.addActionListener(new ActionListener() {//ë‹¤ì‹œì‹œì‘
-
+		
+		restart.addActionListener(new ActionListener() {//MineTop ´Ù½Ã½ÃÀÛ ¹öÆ° action Ãß°¡
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// TODO Auto-generated method stub
@@ -64,28 +56,18 @@ public class Frame extends JFrame {
 				MineBottom.removeAll();
 				setboard();
 				Mine_count=landmine;
-				top_remain_landmine.setText("ë‚¨ì€ ì—´ì‡ : " + Mine_count);
+				top_remain_landmine.setText("³²Àº ¿­¼è: " + Mine_count);
 				MineBottom.revalidate();
 				MineBottom.repaint();
 				
 			}
 			
 		});
-		//MineTopì— ë²„íŠ¼,ë¼ë²¨ ì¶”ê°€
-	
-
+		add(MineBottom, BorderLayout.CENTER);
+		add(MineTop, BorderLayout.NORTH);
 		
-		
-		c.add(MainPanel);
-		
-		MineBottom.setVisible(false);
-		MineTop.setVisible(false);
-		
-		frame.setVisible(true);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
-
-	public void board_remove(int x, int y) {// ì–´ëŠ ë²”ìœ„ê¹Œì§€ shownum ë ì§€ ì •í•´ì¤Œ
+	public void board_remove(int x, int y) {// ¾î´À ¹üÀ§±îÁö shownum µÉÁö Á¤ÇØÁÜ
 		if (showboard[x][y] == 0) {
 			if (board[x][y] == 0) {
 				shownum(x, y);
@@ -106,10 +88,10 @@ public class Frame extends JFrame {
 					board_remove(x, y + 1);
 				if (x + 1 != size && y + 1 != size)
 					board_remove(x + 1, y + 1);
-			} else if (board[x][y] != 8 && board[x][y] > 0) {// ì§€ë¢°ë„ ì•„ë‹ˆê³  0ë„ ì•„ë‹ë•Œ
+			} else if (board[x][y] != 8 && board[x][y] > 0) {// Áö·Úµµ ¾Æ´Ï°í 0µµ ¾Æ´Ò¶§
 				shownum(x, y);
 				showboard[x][y] = 1;
-			} else if (board[x][y] == 8) {// ì§€ë¢°ì¼ë•Œ
+			} else if (board[x][y] == 8) {// Áö·ÚÀÏ¶§
 				gameover();
 			}
 		}
@@ -117,7 +99,7 @@ public class Frame extends JFrame {
 
 	public void setboard() {
 		MineBottom.setLayout(new GridLayout(size, size,2,2));
-		//MineBottom íŒ¨ë„ì— ë²„íŠ¼ ì¶”ê°€
+		//MineBottom ÆĞ³Î¿¡ ¹öÆ° Ãß°¡
 			for (int i = 0; i < size; i++) {
 				for (int j = 0; j < size; j++) {
 					btn[i][j] = new JButton();
@@ -134,7 +116,7 @@ public class Frame extends JFrame {
 				clickCount[i][j] = 0;
 			}
 		}
-		// ì§€ë¢° ë°°ì •
+		// Áö·Ú ¹èÁ¤
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
 				board[i][j] = 0;
@@ -151,7 +133,7 @@ public class Frame extends JFrame {
 			}
 
 		}
-		// ìˆ«ì ë°°ì •
+		// ¼ıÀÚ ¹èÁ¤
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
 				int count = 0;
@@ -201,7 +183,7 @@ public class Frame extends JFrame {
 			if (board[i][j] == 8) {
 				Mine_check--;
 			}
-			top_remain_landmine.setText("ë‚¨ì€ ì—´ì‡ : " + Mine_count);
+			top_remain_landmine.setText("³²Àº ¿­¼è: " + Mine_count);
 		}
 		if (Mine_check == 0) {
 			gameClear();
@@ -215,7 +197,7 @@ public class Frame extends JFrame {
 				Mine_check++;
 			}
 		}
-		top_remain_landmine.setText("ë‚¨ì€ ì—´ì‡ : " + Mine_count);
+		top_remain_landmine.setText("³²Àº ¿­¼è: " + Mine_count);
 		btn[i][j].setIcon(questionMark);
 	}
 
@@ -229,12 +211,12 @@ public class Frame extends JFrame {
 				}
 			}
 		}
-		String gameclear_button[] = { "í™•ì¸", "ë©”ì¸í™”ë©´ìœ¼ë¡œ" };
-		JOptionPane.showOptionDialog(null, "ì¶•í•˜í•©ë‹ˆë‹¤! ëª¨ë“  ìƒìë¥¼ ì—´ì–´ ë³´ë¬¼ì„ ì–»ì—ˆìŠµë‹ˆë‹¤. ë‹¤ì‹œ ì‹œì‘í•˜ì‹œê² ìŠµë‹ˆê¹Œ?", "GAMECLEAR",
-				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, gameclear_button, "í™•ì¸");
+		String gameclear_button[] = { "È®ÀÎ", "¸ŞÀÎÈ­¸éÀ¸·Î" };
+		JOptionPane.showOptionDialog(null, "ÃàÇÏÇÕ´Ï´Ù! ¸ğµç »óÀÚ¸¦ ¿­¾î º¸¹°À» ¾ò¾ú½À´Ï´Ù. ´Ù½Ã ½ÃÀÛÇÏ½Ã°Ú½À´Ï±î?", "GAMECLEAR",
+				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, gameclear_button, "È®ÀÎ");
 	}
 
-	public void gameover() {// ê²Œì„ì˜¤ë²„
+	public void gameover() {// °ÔÀÓ¿À¹ö
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
 				if (board[i][j] == 8) {
@@ -242,12 +224,12 @@ public class Frame extends JFrame {
 				}
 			}
 		}
-		String gameover_button[] = { "í™•ì¸", "ë©”ì¸í™”ë©´ìœ¼ë¡œ" };
-		JOptionPane.showOptionDialog(null, "ë³´ë¬¼ìƒìë¥¼ ì—´ì‡ ì—†ì´ ê±´ë“œë ¤ ëª¨ë‘ ì‚¬ë¼ì¡ŒìŠµë‹ˆë‹¤.. ë‹¤ì‹œ ì‹œì‘í•˜ì‹œê² ìŠµë‹ˆê¹Œ?", "GAMEOVER", JOptionPane.YES_NO_OPTION,
-				JOptionPane.QUESTION_MESSAGE, null, gameover_button, "í™•ì¸");
+		String gameover_button[] = { "È®ÀÎ", "¸ŞÀÎÈ­¸éÀ¸·Î" };
+		JOptionPane.showOptionDialog(null, "º¸¹°»óÀÚ¸¦ ¿­¼è¾øÀÌ °Çµå·Á ¸ğµÎ »ç¶óÁ³½À´Ï´Ù.. ´Ù½Ã ½ÃÀÛÇÏ½Ã°Ú½À´Ï±î?", "GAMEOVER", JOptionPane.YES_NO_OPTION,
+				JOptionPane.QUESTION_MESSAGE, null, gameover_button, "È®ÀÎ");
 	}
 
-	public void shownum(int x, int y) {// ë²„íŠ¼ ë¹„í™œì„±í™”
+	public void shownum(int x, int y) {// ¹öÆ° ºñÈ°¼ºÈ­
 		btn[x][y].setEnabled(false);
 		if (board[x][y] != 0 && board[x][y] != 8) {
 			btn[x][y].setIcon(null);
@@ -267,7 +249,7 @@ public class Frame extends JFrame {
 
 	}
 
-	public class RightMouse implements MouseListener {// ë²„íŠ¼ ë§ˆìš°ìŠ¤ ìš°í´ë¦­ ë˜ì—ˆì„ë•Œ
+	public class RightMouse implements MouseListener {// ¹öÆ° ¸¶¿ì½º ¿ìÅ¬¸¯ µÇ¾úÀ»¶§
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			// TODO Auto-generated method stub
@@ -316,7 +298,7 @@ public class Frame extends JFrame {
 
 	}
 
-	public class myActionListener implements ActionListener {// ë²„íŠ¼ í´ë¦­
+	public class myActionListener implements ActionListener {// ¹öÆ° Å¬¸¯
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub

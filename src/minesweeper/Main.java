@@ -1,8 +1,50 @@
 package minesweeper;
+import javax.swing.*;
 
-public class Main {
+
+
+import java.awt.*;
+public class Main extends JFrame{
+	mainpanel MainPanel=null;
+	Mine_game Mine_Game=null;
+	LOR_game LOR_Game=null;
+	background back_img=null;
+	public void change(String paneName) {
+		
+		if(paneName.equals("MinePanel")) {
+			getContentPane().removeAll();
+			getContentPane().add(Mine_Game);
+			revalidate();
+			repaint();
+		}
+		else if(paneName.equals("MainPanel")) {
+			getContentPane().removeAll();
+			getContentPane().add(MainPanel);
+			revalidate();
+			repaint();
+		}
+		else if(paneName.equals("LORPanel")) {
+			getContentPane().removeAll();
+			getContentPane().add(LOR_Game);
+			revalidate();
+			repaint();
+			
+		}
+	}
 	public static void main(String[] args) {
-		new Frame();
+		Main mainFrame=new Main();
+		
+		mainFrame.setTitle("보물을 찾아라");
+		mainFrame.MainPanel=new mainpanel(mainFrame);
+		mainFrame.Mine_Game=new Mine_game(mainFrame);
+		mainFrame.LOR_Game=new LOR_game(mainFrame);
+		mainFrame.back_img=new background(mainFrame);
+		
+		mainFrame.add(mainFrame.MainPanel);
+		mainFrame.setSize(800, 800);
+		mainFrame.setResizable(false);
+		mainFrame.setVisible(true);
+		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
 }
