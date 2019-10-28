@@ -8,10 +8,13 @@ public class Main extends JFrame{
 	mainpanel MainPanel=null;
 	Mine_game Mine_Game=null;
 	LOR_game LOR_Game=null;
-	background back_img=null;
-	public void change(String paneName) {
-		
+	story story=null;
+	gameover over=null;
+	gameway way=null;
+	
+	public void change(String paneName,int key) {
 		if(paneName.equals("MinePanel")) {
+			Mine_Game.set_landmine(key);
 			getContentPane().removeAll();
 			getContentPane().add(Mine_Game);
 			revalidate();
@@ -25,10 +28,33 @@ public class Main extends JFrame{
 		}
 		else if(paneName.equals("LORPanel")) {
 			getContentPane().removeAll();
+			LOR_Game.moksoom=3;
+			LOR_Game.stage=0;
+			LOR_Game.reset();
 			getContentPane().add(LOR_Game);
 			revalidate();
 			repaint();
+		}
+		
+		else if(paneName.equals("story")) {
+			getContentPane().removeAll();
 			
+			getContentPane().add(story);
+			revalidate();
+			repaint();
+		}
+		else if(paneName.equals("way")) {
+			getContentPane().removeAll();
+			way.count=1;
+			getContentPane().add(way);
+			revalidate();
+			repaint();
+		}
+		else if(paneName.equals("gameover")) {
+			getContentPane().removeAll();
+			getContentPane().add(over);
+			revalidate();
+			repaint();
 		}
 	}
 	public static void main(String[] args) {
@@ -38,12 +64,15 @@ public class Main extends JFrame{
 		mainFrame.MainPanel=new mainpanel(mainFrame);
 		mainFrame.Mine_Game=new Mine_game(mainFrame);
 		mainFrame.LOR_Game=new LOR_game(mainFrame);
-		mainFrame.back_img=new background(mainFrame);
+		mainFrame.story=new story(mainFrame);
+		mainFrame.way=new gameway(mainFrame);
+		mainFrame.over=new gameover(mainFrame);
 		
 		mainFrame.add(mainFrame.MainPanel);
 		mainFrame.setSize(800, 800);
 		mainFrame.setResizable(false);
 		mainFrame.setVisible(true);
+		mainFrame.setLocationRelativeTo(null);
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
