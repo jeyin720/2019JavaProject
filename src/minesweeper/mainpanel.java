@@ -9,11 +9,11 @@ public class mainpanel extends JPanel{
 	JButton startButton = new JButton();
 	JButton howToPlayButton=new JButton();
 	
-	ImageIcon background= new ImageIcon("../images/main_background.png");
-	ImageIcon gameStart = new ImageIcon("../images/gamestart_btn.png");
-	ImageIcon gameStart_press = new ImageIcon("../images/gamestart_btn_pressed.png");
-	ImageIcon howToPlay=new ImageIcon("../images/howtoplay.png");
-	ImageIcon howToPlay_press=new ImageIcon("../images/howtoplay_press.png");
+	ImageIcon background= new ImageIcon("images/main_background.png");
+	ImageIcon gameStart = new ImageIcon("images/gamestart_btn.png");
+	ImageIcon gameStart_press = new ImageIcon("images/gamestart_btn_pressed.png");
+	ImageIcon howToPlay=new ImageIcon("images/howtoplay.png");
+	ImageIcon howToPlay_press=new ImageIcon("images/howtoplay_press.png");
 	
 	Main mainFrame=null;
 	mainpanel(Main mainFrame){

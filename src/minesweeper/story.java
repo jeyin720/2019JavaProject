@@ -6,9 +6,9 @@ import java.awt.event.MouseListener;
 
 public class story extends JPanel {
 	
-	ImageIcon story[]=new ImageIcon[5];
+	ImageIcon story[]=new ImageIcon[6];
 	ImageIcon background;
-	ImageIcon button_img=new ImageIcon("../images/story_arrow.png");
+	ImageIcon button_img=new ImageIcon("images/story_arrow.png");
 	
 	JButton next=new JButton();
 	int count=1;
@@ -16,12 +16,12 @@ public class story extends JPanel {
 	story(Main mainFrame){
 		this.mainFrame=mainFrame;
 		
-		
-		story[0]=new ImageIcon("../images/자바 스토리-05.jpg");
-		story[1]=new ImageIcon("../images/자바 스토리-01.jpg");
-		story[2]=new ImageIcon("../images/자바 스토리-02.jpg");
-		story[3]=new ImageIcon("../images/자바 스토리-03.jpg");
-		story[4]=new ImageIcon("../images/자바 스토리-04.jpg");
+		story[0]=new ImageIcon("images/story-00.jpg");
+		story[1]=new ImageIcon("images/story-05.jpg");
+		story[2]=new ImageIcon("images/story-01.jpg");
+		story[3]=new ImageIcon("images/story-02.jpg");
+		story[4]=new ImageIcon("images/story-03.jpg");
+		story[5]=new ImageIcon("images/story-04.jpg");
 		
 		background=story[0];
 		
@@ -44,7 +44,7 @@ public class story extends JPanel {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				// TODO Auto-generated method stub
-				if(count!=5) {
+				if(count!=6) {
 					
 					background=story[count];
 					count++;
@@ -56,6 +56,7 @@ public class story extends JPanel {
 				else {
 					count=1;
 					background=story[0];
+					mainFrame.LOR_Game=new LOR_game(mainFrame);
 					mainFrame.change("LORPanel", 0);
 				}
 				

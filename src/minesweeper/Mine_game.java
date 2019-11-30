@@ -24,12 +24,12 @@ public class Mine_game extends JPanel{
 	int clickCount[][] = new int[size][size];
 	JButton[][] btn = new JButton[size][size];
 	int showboard[][] = new int[size][size];
-	ImageIcon flagImage = new ImageIcon("../images/key.png");
-	ImageIcon questionMark = new ImageIcon("../images/question.png");
-	ImageIcon clearImage = new ImageIcon("../images/gold.png");
-	ImageIcon treasureBox = new ImageIcon("../images/box.png");
+	ImageIcon flagImage = new ImageIcon("images/key.png");
+	ImageIcon questionMark = new ImageIcon("images/question.png");
+	ImageIcon clearImage = new ImageIcon("images/gold.png");
+	ImageIcon treasureBox = new ImageIcon("images/box.png");
 	
-	ImageIcon grass=new ImageIcon("../images/풀.png");
+	ImageIcon grass=new ImageIcon("images/pool.png");
 	
 	JLabel top_hidden_landmine;
 	JLabel top_remain_landmine;
@@ -240,7 +240,7 @@ public class Mine_game extends JPanel{
 		int selected=JOptionPane.showOptionDialog(null, "축하합니다! 모든 상자를 열어 보물을 얻었습니다.", "GAMECLEAR",
 				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, gameclear_button, "확인");
 		if(selected==0) {
-			  //게임성공 패널
+			mainFrame.change("gameclear", landmine);
 		  }
 		else {
 			mainFrame.change("MainPanel", 0);

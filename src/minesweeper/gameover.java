@@ -6,9 +6,9 @@ import java.awt.event.MouseListener;
 
 public class gameover extends JPanel {
 
-	ImageIcon gameover=new ImageIcon("../images/게임오바.jpg");
-	ImageIcon button_img=new ImageIcon("../images/story_arrow.png");
-	
+	ImageIcon gameover=new ImageIcon("images/over.jpg");
+	ImageIcon button_img=new ImageIcon("images/story_arrow.png");
+
 	JButton next=new JButton();
 	int count=1;
 	Main mainFrame=null;
