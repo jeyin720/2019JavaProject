@@ -23,6 +23,9 @@ public class LOR_game extends JPanel{
 	ImageIcon stage_img[]=new ImageIcon[4];
 	ImageIcon left=new ImageIcon("images/left_arrow.png");
 	ImageIcon right=new ImageIcon("images/right_arrow.png");
+	ImageIcon left_press=new ImageIcon("images/left_arrow_press.png");
+	ImageIcon right_press=new ImageIcon("images/right_arrow_press.png");
+	
 	ImageIcon heartImg=new ImageIcon("images/moksoom.png");
 	
 	JLabel show_sheep[]=new JLabel[4];
@@ -39,15 +42,17 @@ public class LOR_game extends JPanel{
 	
 	Timer th= new Timer(timer);
 
-	int stage_count_sheep[]={5,10,20,45};
-	int stage_sheep[]= {2,2,3,4};
+	int stage_count_sheep[]={10,15,15,50}; //스테이지 별 양의 수  (10,20,20,50)
+	int stage_sheep[]= {2,3,4,4};
 	int key[]= {5,10,15,20};
-	int moksoom=3;
+	int moksoom=2;
 	int stage;
 	
-	int count_sheep;
+	int count_sheep; // 단계 별 양의 수
+	int count_num_sheep=0; // 목장을 보낸 모든 양의 수
 	int sheep;
 	int get_key;
+	int a=0;
 	
 	Main mainFrame=null;
 	
@@ -91,7 +96,7 @@ public class LOR_game extends JPanel{
         setOpaque(false); //그림을 표시하게 설정,투명하게 조절
         super.paintComponent(g);
  }
-	public void add_stage_img() {
+	public void add_stage_img() { //스테이지 이미지 추가
 		
 		
 		switch(stage) {
@@ -101,19 +106,28 @@ public class LOR_game extends JPanel{
 		case 3:show_stage.setIcon(stage_img[3]);break;
 		}
 		
-		show_stage.setBounds(0, 10, 300, 230);
+		show_stage.setBounds(0, 30, 300, 230);
 		add(show_stage);
 	}
-	public int get_key() {
-		return get_key;
-	}
-	
-	public void reset() {
+	public void reset() { //스테이지 올라갔을 때 리셋
 		
-		get_key=key[stage];
+        
 		count_sheep=stage_count_sheep[stage];
+		
+		
+		if(stage!=0) JOptionPane.showMessageDialog(null,"NEXT STAGE!!","next",JOptionPane.PLAIN_MESSAGE);
+		if(stage==3)  JOptionPane.showMessageDialog(null,"!! 보이는 것과 반대로 하세요 !!","next",JOptionPane.WARNING_MESSAGE);
+		
+		switch(stage) {
+		case 0: Play("sound/stage_1.wav"); break;
+		case 1: Play("sound/stage_2.wav"); break;
+		case 2: Play("sound/stage_3.wav"); break;
+		case 3: Play("sound/stage_4.wav");break;
+		}
+		
+		
         sheep=stage_sheep[stage];  
-        remain_sheep.setText("남은 양 : "+count_sheep);
+        remain_sheep.setText("목장 속 양의 수 : "+count_num_sheep);
        
         show_heart();
         create_sheep();
@@ -121,16 +135,16 @@ public class LOR_game extends JPanel{
         show_sheep();
         add_stage_img();
       
-        th.reset();
+        a=0;
 	}
 		
-	 public void Play(String fileName)
+	 public void Play(String fileName) //소리
 	    {
 	        try
 	        {
 	            AudioInputStream ais = AudioSystem.getAudioInputStream(new File(fileName));
 	            Clip clip = AudioSystem.getClip();
-	            clip.stop();
+	            //clip.stop();
 	            clip.open(ais);
 	            clip.start();
 	        }
@@ -139,9 +153,15 @@ public class LOR_game extends JPanel{
 	        }
 	    }
 	public void create_sheep() { // 맨 처음 양들 랜덤 배정
-		for(int i=0;i<4;i++) {
-		random_sheep[i] = (int) (Math.random() * sheep);
-		
+		if(stage==0) {
+			for(int i=0;i<4;i++) {
+				random_sheep[i] = (int) (Math.random() * sheep);
+			}
+		}
+		else { //다음 스테이지로 넘어갔을 때 이전과 다른 양이 배정되어서 목숨 깎이는 것 방지
+			for(int i=0;i<3;i++) {
+				random_sheep[i] = (int) (Math.random() * sheep);
+			}
 		}
 	}
 	
@@ -168,44 +188,76 @@ public class LOR_game extends JPanel{
 			add(show_sheep[i]);
 		}
 	}
-	public void clickEvent_right() {
-		if(timer.getText().equals("시간 초과")) {
-			mainFrame.change("gameover",0);
+	public void cal_key(int SheepNum) { // 받는 키 개수 계산
+		switch(SheepNum/10) {
+		case 0:case 1:case 2: get_key=5;break;
+		case 3: case 4: get_key=10;break;  //시연할 때만 5로 원래는 10
+		case 5: get_key=15;break;
+		default: get_key=20;break;
 		}
+	}
+	public void clickEvent_right() { //올바르게 클릭했을 때 함수
+		if(timer.getText().equals("시간 종료")&& a!=1) {
+			a=1; // 두 번 들어오는 거 방지
+			cal_key(count_num_sheep);
+			JOptionPane.showMessageDialog(null,"축하합니다! 열쇠 "+get_key+"개를 받았습니다","시간 종료",JOptionPane.INFORMATION_MESSAGE);
+			  mainFrame.Mine_Game=new Mine_game(mainFrame);
+			  mainFrame.change("story2",get_key);
+		}
+		if(a!=1) {
 		Play("sound/LOR_correct.wav");
 		  count_sheep--;
-		  remain_sheep.setText("남은 양 : "+count_sheep);
+		  count_num_sheep++;
+		  remain_sheep.setText("목장 속 양의 수 : "+count_num_sheep);
 		  if(count_sheep==0) {
-			  String gameclear_button[] = { "다음 스테이지", "보물 찾으러 가기" };
-			  int selected=JOptionPane.showOptionDialog(null, "축하합니다! 현재 열쇠 "+get_key+"개를 가질 수 있습니다", "STAGECLEAR",
-						JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, gameclear_button, "확인");
-			  if(selected==0) {
-				  stage++;
-				  reset();
-			  }
-			  else {
-				  mainFrame.Mine_Game=new Mine_game(mainFrame);
-				  mainFrame.change("MinePanel",get_key);
-			  }
+			  stage++;
+			  reset();
 		  }
-	}
-	public void clickEvent_wrong() {
-		if(timer.getText().equals("시간 초과")) {
-			mainFrame.change("gameover",0);
 		}
-		Play("../sound/LOR_wrong.wav");
-		moksoom--;
-		show_heart();
 	}
-	public void add_arrow() {
+	public void clickEvent_wrong() { // 틀리게 클릭했을 때 함수
+		if(timer.getText().equals("시간 종료")&& a!=1) {
+			a=1;
+			cal_key(count_num_sheep);
+			JOptionPane.showMessageDialog(null,"축하합니다! 열쇠 "+get_key+"개를 받았습니다","시간 종료",JOptionPane.INFORMATION_MESSAGE);
+			  mainFrame.Mine_Game=new Mine_game(mainFrame);
+			  mainFrame.change("story2",get_key);
+		 
+		}
+		if(a!=1) {
+			Play("sound/LOR_wrong.wav");
+			moksoom--;
+			show_heart();
+		}
+	}
+	public void add_arrow() { // 방향키 추가
 		left_arrow.setBounds(30, 615, 150, 150);
 	      right_arrow.setBounds(620, 615, 150, 150);
-	      right_arrow.addMouseListener(new MouseListener() {
+	      right_arrow.addMouseListener(new MouseListener() { // 오른쪽 방향키 클릭 이벤트 리스너
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				// TODO Auto-generated method stub
-				if(stage==0||stage==1||stage==2) {
+				
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				right_arrow.setIcon(right_press);
+				if(stage==0||stage==1) {
 	            	  if(random_sheep[3]==1) {//1 (회색 양이면)
 	            		  clickEvent_right();
 					  }
@@ -214,8 +266,8 @@ public class LOR_game extends JPanel{
 	            		  
 	            	  }
 				}
-				if(stage==3) {
-	            	  if(random_sheep[3]==1||random_sheep[3]==3) {//1 (회색 양이면)
+				else if(stage==2) {
+	            	  if(random_sheep[3]==1||random_sheep[3]==3) {//1 (회색 양이면) 3 (노란 양이면)
 	            		  clickEvent_right();
 					  }
 	            	  else {
@@ -223,12 +275,36 @@ public class LOR_game extends JPanel{
 	            		  
 	            	  }
 				}
+				else if(stage==3) {
+					if(random_sheep[3]==0||random_sheep[3]==2) {//0 (핑크 양이면) //1 (파란 양이면)
+						  clickEvent_right();
+					  }
+					  else {
+						  clickEvent_wrong();
+					  }
+				}
+				
 				
 	              //맨 위 양 랜덤 배정
 	              random_sheep();
 			}
 
 			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				right_arrow.setIcon(right);
+			}
+	    	  
+	      });
+	      left_arrow.addMouseListener(new MouseListener() { //왼쪽 방향키 클릭 리스너
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
 			public void mouseEntered(MouseEvent e) {
 				// TODO Auto-generated method stub
 				
@@ -243,63 +319,41 @@ public class LOR_game extends JPanel{
 			@Override
 			public void mousePressed(MouseEvent e) {
 				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-	    	  
-	      });
-	      left_arrow.addMouseListener(new MouseListener() {
-
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				// TODO Auto-generated method stub
-				if(stage==0||stage==1) {
-				  if(random_sheep[3]==0) {//0 (핑크 양이면)
-					  clickEvent_right();
-				  }
-				  else {
-					  clickEvent_wrong();
-				  }
-				}
-				if(stage==2||stage==3) {
-					  if(random_sheep[3]==0||random_sheep[3]==2) {//0 (핑크 양이면)
+				left_arrow.setIcon(left_press);
+				if(stage==0) {
+					  if(random_sheep[3]==0) {//0 (핑크 양이면)
 						  clickEvent_right();
 					  }
 					  else {
 						  clickEvent_wrong();
 					  }
 					}
-				//맨 위 양 랜덤 배정
-				random_sheep();
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
+					else if(stage==1||stage==2) {
+						  if(random_sheep[3]==0||random_sheep[3]==2) {//0 (핑크 양이면) //1 (파란 양이면)
+							  clickEvent_right();
+						  }
+						  else {
+							  clickEvent_wrong();
+						  }
+					}
+					else if(stage==3) {
+						if(random_sheep[3]==1||random_sheep[3]==3) {//1 (회색 양이면) 3 (노란 양이면)
+		            		  clickEvent_right();
+						  }
+		            	  else {
+		            		  clickEvent_wrong();
+		            		  
+		            	  }
+					}
+					
+					//맨 위 양 랜덤 배정
+					random_sheep();
 			}
 
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				// TODO Auto-generated method stub
-				
+				left_arrow.setIcon(left);
 			}
 	    	  
 	      });
@@ -308,11 +362,11 @@ public class LOR_game extends JPanel{
 	      
 	}
 	
-	public void random_sheep() {
-		for(int i=2;i>=0;i--) {
+	public void random_sheep() { // 클릭했을 때 양 내려오게 하는 함수
+		for(int i=2;i>=0;i--) { // 하나씩 내려오게
       	  random_sheep[i+1]=random_sheep[i];
         }
-        random_sheep[0]=(int)(Math.random()*sheep);
+        random_sheep[0]=(int)(Math.random()*sheep); //새로운 양 랜덤 배정
         //양 바뀐 새로운 이미지로 변경
         for(int i=0;i<4;i++) {
 			if(random_sheep[i]==0) {
@@ -329,18 +383,21 @@ public class LOR_game extends JPanel{
 			}
         }
 	}
-	public void other_remove() {
-		if(stage==2) {
+	public void other_remove() { // 양 수 달라졌을 때 위치 바꾸기 위해 원래 있던  지우는 함수
+		if(stage==1) {
+			remove(left_sheep[0]);
 			remove(left_sheep[1]);
 		}
-		else if(stage==3) {
+		else if(stage==2||stage==3) {
+			remove(left_sheep[0]);
+			remove(right_sheep[0]);
 			remove(left_sheep[1]);
 			remove(right_sheep[1]);
 		}
 	}
-	public void show_other() { // 다른것들 패널에 붙이기
+	public void show_other() { // 왼쪽 오른쪽 양들 , label들 패널에 붙이기
 		
-		  if(stage==0||stage==1) {
+		  if(stage==0) {
 			  
 		      left_sheep[0].setIcon(pink_sheep);
 		      right_sheep[0].setIcon(gray_sheep);
@@ -349,7 +406,7 @@ public class LOR_game extends JPanel{
 		      add(left_sheep[0]);
 		      add(right_sheep[0]); // 울타리 속 양
 		  }
-		  else if(stage==2) {
+		  else if(stage==1) {
 			  left_sheep[0].setIcon(pink_sheep);
 			  left_sheep[1].setIcon(blue_sheep);
 		      right_sheep[0].setIcon(gray_sheep);
@@ -376,13 +433,13 @@ public class LOR_game extends JPanel{
 		      add(right_sheep[1]);// 울타리 속 양
 		  }
 	      
-	      remain_sheep.setBounds(5, 5,200,100);
-	      remain_sheep.setText("남은 양 : "+count_sheep);
+	      remain_sheep.setBounds(5, 5,300,100);
+	      remain_sheep.setText("목장 속 양의 수 : "+count_num_sheep);
 	      add(remain_sheep); // 남은 양 표시 라벨
 	      
 	       
 	     
-	      timer.setBounds(150, 5,200,100);
+	      timer.setBounds(5, 30,200,100);
 	      add(timer); //타이머 label
 	      
 	      if(stage==0) {
@@ -404,7 +461,7 @@ public class LOR_game extends JPanel{
 		    }
 		}
 		else {
-			th.interrupt();
+			//th.interrupt();
 			mainFrame.change("gameover",0);
 		}
 	    

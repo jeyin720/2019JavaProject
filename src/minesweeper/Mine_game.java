@@ -46,6 +46,8 @@ public class Mine_game extends JPanel{
 		top_hidden_landmine=new JLabel();
 		top_remain_landmine = new JLabel("남은 열쇠: " + Mine_count);
 		
+		top_hidden_landmine.setFont(new Font("HY견고딕",Font.PLAIN,20));
+		top_remain_landmine.setFont(new Font("HY견고딕",Font.PLAIN,20));
 		MineTop.setLayout(new FlowLayout());
 		MineTop.add(top_hidden_landmine);
 		MineTop.add(restart);
@@ -73,7 +75,8 @@ public class Mine_game extends JPanel{
 		add(MineTop, BorderLayout.NORTH);
 		
 	}
-	public void set_landmine(int key) {
+	
+	public void set_landmine(int key) { // 보물 개수 설정
 		landmine=key;
 		MineBottom.removeAll();
 		setboard();
@@ -85,7 +88,7 @@ public class Mine_game extends JPanel{
 	}
 	public void board_remove(int x, int y) {// 어느 범위까지 shownum 될지 정해줌
 		if (showboard[x][y] == 0) {
-			if (board[x][y] == 0) {
+			if (board[x][y] == 0) { // 아무 것도 들어있지 않을때
 				shownum(x, y);
 				showboard[x][y] = 1;
 				if (x - 1 != -1 && y - 1 != -1)
@@ -113,8 +116,9 @@ public class Mine_game extends JPanel{
 		}
 	}
 
-	public void setboard() {
+	public void setboard() { //board 세팅
 		top_hidden_landmine.setText("숨겨진 상자: " + landmine);
+		
 		MineBottom.setLayout(new GridLayout(size, size,2,2));
 		//MineBottom 패널에 버튼 추가
 			for (int i = 0; i < size; i++) {
@@ -122,8 +126,6 @@ public class Mine_game extends JPanel{
 					btn[i][j] = new JButton();
 					MineBottom.add(btn[i][j]);
 					btn[i][j].setIcon(grass);
-					//btn[i][j].setBorderPainted(false);
-					//btn[i][j].setContentAreaFilled(false);
 					btn[i][j].addActionListener(new myActionListener());
 					btn[i][j].addMouseListener(new RightMouse());
 				}
@@ -137,7 +139,7 @@ public class Mine_game extends JPanel{
 				clickCount[i][j] = 0;
 			}
 		}
-		// 지뢰 배정
+		// 보물 배정
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
 				board[i][j] = 0;
@@ -154,7 +156,7 @@ public class Mine_game extends JPanel{
 			}
 
 		}
-		// 숫자 배정
+		// 숫자 배정 8-보물
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
 				int count = 0;
@@ -197,7 +199,7 @@ public class Mine_game extends JPanel{
 		}
 	}// setboard
 
-	public void flag(int i, int j) {
+	public void flag(int i, int j) { //열쇠(깃발) 구현
 		if (showboard[i][j] != 1) {
 			Image img =flagImage.getImage() ;  
 			Image newimg = img.getScaledInstance( 50,50,  java.awt.Image.SCALE_SMOOTH ) ;  
@@ -215,7 +217,7 @@ public class Mine_game extends JPanel{
 		}
 	}
 
-	public void questionMark(int i, int j) {
+	public void questionMark(int i, int j) { //물음표 구현
 		if (showboard[i][j] != 1) {
 			Mine_count++;
 			if (board[i][j] == 8) {
@@ -226,7 +228,7 @@ public class Mine_game extends JPanel{
 		btn[i][j].setIcon(questionMark);
 	}
 
-	public void gameClear() {
+	public void gameClear() { //보물에 열쇠를 다 올바르게 꽂았을 때 게임 성공
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
 				if (board[i][j] == 8) {
@@ -238,7 +240,7 @@ public class Mine_game extends JPanel{
 		}
 		String gameclear_button[] = { "확인", "메인화면으로" };
 		int selected=JOptionPane.showOptionDialog(null, "축하합니다! 모든 상자를 열어 보물을 얻었습니다.", "GAMECLEAR",
-				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, gameclear_button, "확인");
+				JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, gameclear_button, "확인");
 		if(selected==0) {
 			mainFrame.change("gameclear", landmine);
 		  }
@@ -256,18 +258,12 @@ public class Mine_game extends JPanel{
 				}
 			}
 		}
-		String gameover_button[] = { "확인", "ㅠㅠ" };
-		int selected=JOptionPane.showOptionDialog(null, "보물상자를 열쇠없이 건드려 모두 사라졌습니다.. ", "GAMEOVER", JOptionPane.YES_NO_OPTION,
-				JOptionPane.QUESTION_MESSAGE, null, gameover_button, "확인");
-		if(selected==0) {
-			  mainFrame.change("gameover", 0);
-		  }
-		else {
-			mainFrame.change("gameover", 0);
-		}
+		JOptionPane.showMessageDialog(null,"보물상자를 열쇠 없이 건드리면 보물을 얻을 수 없습니다 ..","GAME OVER",JOptionPane.ERROR_MESSAGE);
+		mainFrame.change("gameover", 0);
+		 
 	}
 
-	public void shownum(int x, int y) {// 버튼 비활성화
+	public void shownum(int x, int y) {// 버튼 비활성화 
 		btn[x][y].setEnabled(false);
 		if (board[x][y] != 0 && board[x][y] != 8) {
 			btn[x][y].setIcon(null);
@@ -335,12 +331,12 @@ public class Mine_game extends JPanel{
 		@Override
 		public void mouseReleased(MouseEvent e) {
 			// TODO Auto-generated method stub
-
+ 
 		}
 
 	}
 
-	public class myActionListener implements ActionListener {// 버튼 클릭
+	public class myActionListener implements ActionListener {// 버튼 왼쪽 클릭
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub

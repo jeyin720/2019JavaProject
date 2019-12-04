@@ -6,28 +6,29 @@ import javax.swing.*;
 class Timer extends Thread {
 	private JLabel timerLabel;
 	int n; 
+	boolean wait=false;
 	public Timer(JLabel timerLabel) { 
 		this.timerLabel = timerLabel;
 	}
 
 	@Override
 	public void run() {
-		n=1;
-		while(n<=10) {
+		wait=false;
+		n=40;
+		while(n>0) {
 			timerLabel.setText("시간 : "+Integer.toString(n)); 
-			n++; 
+			
 			try {
 				Thread.sleep(1000);
 			}
 			catch(InterruptedException e) {
 				return;
-			}
-		} timerLabel.setText("시간 초과");
+			} 
+			--n; 
+		}
+		timerLabel.setText("시간 종료");
 		timerLabel.setForeground(Color.RED);
 		
-	}
-	public void reset() {
-		n=1;
 	}
 }
 

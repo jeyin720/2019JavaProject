@@ -9,6 +9,7 @@ public class Main extends JFrame{
 	Mine_game Mine_Game=null;
 	LOR_game LOR_Game=null;
 	story story=null;
+	LORstory story2=null;
 	gameover over=null;
 	gameway way=null;
 	gameclear clear=null;
@@ -32,14 +33,20 @@ public class Main extends JFrame{
 		else if(paneName.equals("LORPanel")) {
 			getContentPane().removeAll();
 			LOR_Game.other_remove();
-			LOR_Game.moksoom=3;
+			LOR_Game.moksoom=2;
 			LOR_Game.stage=0;
-			LOR_Game.reset();
+			LOR_Game.reset(); //끝나고 다시 게임시작 했을때를 위한 리셋
 			getContentPane().add(LOR_Game);
 			revalidate();
 			repaint();
 		}
-		
+		else if(paneName.equals("story2")) {
+			story2.getKey(key);
+			getContentPane().removeAll();
+			getContentPane().add(story2);
+			revalidate();
+			repaint();
+		}
 		else if(paneName.equals("story")) {
 			getContentPane().removeAll();
 			getContentPane().add(story);
@@ -79,9 +86,8 @@ public class Main extends JFrame{
 		
 		mainFrame.setTitle("보물을 찾아라");
 		mainFrame.MainPanel=new mainpanel(mainFrame);
-		//mainFrame.Mine_Game=new Mine_game(mainFrame);
-		//mainFrame.LOR_Game=new LOR_game(mainFrame);
 		mainFrame.story=new story(mainFrame);
+		mainFrame.story2=new LORstory(mainFrame);
 		mainFrame.way=new gameway(mainFrame);
 		mainFrame.over=new gameover(mainFrame);
 		mainFrame.clear=new gameclear(mainFrame);

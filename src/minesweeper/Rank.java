@@ -46,7 +46,7 @@ public class Rank {
 		            e.printStackTrace();
 		        }
 
-				if (conn != null){System.out.println("성공");}
+				if (conn != null){}
 				else{System.out.println("실패");}
 				
 				 
@@ -68,7 +68,6 @@ public class Rank {
 	                .toString();
 	        try {
 	            stmt.executeUpdate(sql);
-	            System.out.println("삽입 성공");
 	        } catch (SQLException e) {
 	            // TODO Auto-generated catch block
 	            e.printStackTrace();

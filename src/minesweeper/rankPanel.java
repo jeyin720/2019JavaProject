@@ -39,7 +39,6 @@ public class rankPanel extends JPanel {
 			}
 			y+=100;
 		}
-		System.out.println(a[0][0]);
 		
 		next.setIcon(button_img);
 		next.setBorderPainted(false);
