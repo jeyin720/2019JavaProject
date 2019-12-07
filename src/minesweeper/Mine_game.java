@@ -87,10 +87,12 @@ public class Mine_game extends JPanel{
 		MineBottom.repaint();
 	}
 	public void board_remove(int x, int y) {// 어느 범위까지 shownum 될지 정해줌
-		if (showboard[x][y] == 0) {
+		if (showboard[x][y] == 0) { // 안열린 칸이면
 			if (board[x][y] == 0) { // 아무 것도 들어있지 않을때
-				shownum(x, y);
-				showboard[x][y] = 1;
+				shownum(x, y); //일단 board[x][y]칸 보여주기
+				showboard[x][y] = 1; //열린 칸으로 값 넣어주기
+				
+				//주변에 칸들이 있다면 재귀호출
 				if (x - 1 != -1 && y - 1 != -1)
 					board_remove(x - 1, y - 1);
 				if (y - 1 != -1)
