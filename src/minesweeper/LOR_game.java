@@ -110,13 +110,12 @@ public class LOR_game extends JPanel{
 		add(show_stage);
 	}
 	public void reset() { //스테이지 올라갔을 때 리셋
-		
-        
 		count_sheep=stage_count_sheep[stage];
 		
-		
-		if(stage!=0) JOptionPane.showMessageDialog(null,"NEXT STAGE!!","next",JOptionPane.PLAIN_MESSAGE);
-		if(stage==3)  JOptionPane.showMessageDialog(null,"!! 보이는 것과 반대로 하세요 !!","next",JOptionPane.WARNING_MESSAGE);
+		if(stage!=0) JOptionPane.showMessageDialog(null
+				,"NEXT STAGE!!","next",JOptionPane.PLAIN_MESSAGE);
+		if(stage==3)  JOptionPane.showMessageDialog(null
+				,"!! 보이는 것과 반대로 하세요 !!","next",JOptionPane.WARNING_MESSAGE);
 		
 		switch(stage) {
 		case 0: Play("sound/stage_1.wav"); break;
@@ -125,15 +124,14 @@ public class LOR_game extends JPanel{
 		case 3: Play("sound/stage_4.wav");break;
 		}
 		
-		
         sheep=stage_sheep[stage];  
         remain_sheep.setText("목장 속 양의 수 : "+count_num_sheep);
        
-        show_heart();
-        create_sheep();
-        show_other();
-        show_sheep();
-        add_stage_img();
+        show_heart(); // 목숨 보여주기
+        create_sheep(); // 양 랜덤 배정
+        show_other(); // 양 제외 나머지 붙이기
+        show_sheep(); // 양 붙이기
+        add_stage_img();// 스테이지 이미지 붙이기
       
         a=0;
 	}
@@ -152,6 +150,7 @@ public class LOR_game extends JPanel{
 	        {
 	        }
 	    }
+	 
 	public void create_sheep() { // 맨 처음 양들 랜덤 배정
 		if(stage==0) {
 			for(int i=0;i<4;i++) {
@@ -188,26 +187,27 @@ public class LOR_game extends JPanel{
 			add(show_sheep[i]);
 		}
 	}
-	public void cal_key(int SheepNum) { // 받는 키 개수 계산
+	public void cal_key(int SheepNum) { // 총 누적된 양의 수로 받을 열쇠 갯수 계산하는 함수
 		switch(SheepNum/10) {
 		case 0:case 1:case 2: get_key=5;break;
-		case 3: case 4: get_key=10;break;  //시연할 때만 5로 원래는 10
+		case 3: case 4: get_key=10;break; 
 		case 5: get_key=15;break;
 		default: get_key=20;break;
 		}
 	}
 	public void clickEvent_right() { //올바르게 클릭했을 때 함수
-		if(timer.getText().equals("시간 종료")&& a!=1) {
+		if(timer.getText().equals("시간 종료")&& a!=1) { // 제한시간 종료 되었을 때
 			a=1; // 두 번 들어오는 거 방지
 			cal_key(count_num_sheep);
-			JOptionPane.showMessageDialog(null,"축하합니다! 열쇠 "+get_key+"개를 받았습니다","시간 종료",JOptionPane.INFORMATION_MESSAGE);
-			  mainFrame.Mine_Game=new Mine_game(mainFrame);
-			  mainFrame.change("story2",get_key);
+			JOptionPane.showMessageDialog(null
+					,"축하합니다! 열쇠 "+get_key+"개를 받았습니다","시간 종료",JOptionPane.INFORMATION_MESSAGE);
+			  mainFrame.Mine_Game=new Mine_game(mainFrame); // 처음 시작할때 프로그램 시작되는 시간 줄이려고 여기서!
+			  mainFrame.change("story2",get_key);//두번째 스토리로 변경
 		}
 		if(a!=1) {
 		Play("sound/LOR_correct.wav");
-		  count_sheep--;
-		  count_num_sheep++;
+		  count_sheep--;// 스테이지 별 양의 수 --
+		  count_num_sheep++;// 총 누적 양의 수 ++
 		  remain_sheep.setText("목장 속 양의 수 : "+count_num_sheep);
 		  if(count_sheep==0) {
 			  stage++;
@@ -216,18 +216,19 @@ public class LOR_game extends JPanel{
 		}
 	}
 	public void clickEvent_wrong() { // 틀리게 클릭했을 때 함수
-		if(timer.getText().equals("시간 종료")&& a!=1) {
+		if(timer.getText().equals("시간 종료")&& a!=1) {// 제한시간 종료 되었을 때
 			a=1;
-			cal_key(count_num_sheep);
-			JOptionPane.showMessageDialog(null,"축하합니다! 열쇠 "+get_key+"개를 받았습니다","시간 종료",JOptionPane.INFORMATION_MESSAGE);
+			cal_key(count_num_sheep); // 총 누적된 양의 수로 받을 열쇠 갯수 계산하는 함수
+			JOptionPane.showMessageDialog(null
+					,"축하합니다! 열쇠 "+get_key+"개를 받았습니다","시간 종료",JOptionPane.INFORMATION_MESSAGE);
 			  mainFrame.Mine_Game=new Mine_game(mainFrame);
-			  mainFrame.change("story2",get_key);
+			  mainFrame.change("story2",get_key); //두번째 스토리로 변경
 		 
 		}
 		if(a!=1) {
 			Play("sound/LOR_wrong.wav");
-			moksoom--;
-			show_heart();
+			moksoom--; // 목숨 깎아버리기
+			show_heart(); // 목숨이 깎였으니 새로 보여줘야함
 		}
 	}
 	public void add_arrow() { // 방향키 추가
@@ -367,7 +368,8 @@ public class LOR_game extends JPanel{
       	  random_sheep[i+1]=random_sheep[i];
         }
         random_sheep[0]=(int)(Math.random()*sheep); //새로운 양 랜덤 배정
-        //양 바뀐 새로운 이미지로 변경
+        
+        //양 새로운 이미지로 변경
         for(int i=0;i<4;i++) {
 			if(random_sheep[i]==0) {
 				show_sheep[i].setIcon(pink_sheep);

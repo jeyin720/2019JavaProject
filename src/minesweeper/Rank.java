@@ -28,14 +28,10 @@ public class Rank {
 	 String table="rank";
 	 Rank(){
 		 try {
-
 				String driver = "com.mysql.jdbc.Driver"; // 2. 데이터베이스에 연결하기 위한 정보 
 				String url = "jdbc:mysql://localhost:3306/2019javaproject?useSSL=false&serverTimezone=UTC"; // 연결문자열, localhost - 127.0.0.1 
 				String user = "root"; // 데이터베이스 ID 
 				String pw = "mirim2";
-				
-
-				
 
 				conn = DriverManager.getConnection(url,user,pw);
 
@@ -91,11 +87,11 @@ public class Rank {
 		 	int count=0;
 	        StringBuilder sb = new StringBuilder();
 	        String sql = sb.append("select * from " + table + " order by score desc")
-	                .toString();
+	                .toString();// score를 기준으로 오름차순 검색
 	        try {
 	            ResultSet rs = stmt.executeQuery(sql);
 	                   
-	              while(rs.next()&&count<5){
+	              while(rs.next()&&count<5){// 5개의 행만 배열에 넣어줌
 	                     a[count][0]=rs.getString("name");
 	                     a[count][1]=Integer.toString(rs.getInt("score"));
 	                     count++;

@@ -13,11 +13,9 @@ class Timer extends Thread {
 
 	@Override
 	public void run() {
-		wait=false;
 		n=40;
 		while(n>0) {
 			timerLabel.setText("시간 : "+Integer.toString(n)); 
-			
 			try {
 				Thread.sleep(1000);
 			}
@@ -28,7 +26,6 @@ class Timer extends Thread {
 		}
 		timerLabel.setText("시간 종료");
 		timerLabel.setForeground(Color.RED);
-		
 	}
 }
 
